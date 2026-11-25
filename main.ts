@@ -1,18 +1,29 @@
-// news-image-20261124 entry (Node 22, standard library only).
-// The image is the entry.png beside this file: a newspaper front page
-// summing up Tuesday 24 November 2026, drawn from that day's reporting:
-// the Russian strike on Zaporizhzhia, Israeli strikes in Gaza, Iran and
-// the US naval blockade, Russian aircraft in South Korea's air defence
-// zone, and Jensen Huang's reinstatement as Nvidia CEO.
-// The program copies it to /output/entry.png, deterministically:
-// the same bytes in, the same bytes out, on every run. The image
-// names its day in large type, so the judge can tell at a glance
-// that it sums up 24 November 2026 and no other day.
+// Entry for "Sum up 24 November's world news in one image" (make.fun).
 //
-// Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
+// The entry is a newspaper front page, entry.png, drawn from the
+// reporting of Tuesday 24 November 2026 and baked into this repository:
+// the Russian strike on Zaporizhzhia, Israeli strikes in Gaza, Iran
+// and the US naval blockade, Russian jets in South Korea's air
+// defence zone, Jensen Huang's return as Nvidia CEO, and the Houthi
+// strike on Riyadh's tallest tower, plus Russia's warning to Estonia
+// and NATO's space-defence vow.
+//
+// The program needs no network. It simply places the finished image
+// where the grader expects it, so running it twice always writes
+// exactly the same bytes.
+//
+// Local run:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { copyFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-copyFileSync(new URL('./entry.png', import.meta.url), join(process.env.MAKEFUN_OUTPUT_DIR ?? '/output', 'entry.png'));
+const here = dirname(fileURLToPath(import.meta.url));
+const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+
+mkdirSync(outDir, { recursive: true });
+writeFileSync(
+  join(outDir, 'entry.png'),
+  readFileSync(join(here, 'entry.png')),
+);
